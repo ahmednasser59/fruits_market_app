@@ -1,0 +1,14 @@
+  {
+  "@@locale": "ar",
+  "@@locale": "ar",
+  "appTitle": "Fruits Hub",
+  "@appTitle": {
+    "description": "The application title shown in the app bar and launcher",
+    "type": "text"
+  },
+  "welcome": "مرحبًا",
+  "@welcome": {
+    "description": "Short welcome message",
+    "type": "text"
+  }
+}
