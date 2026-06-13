@@ -33,6 +33,7 @@ class AuthRepoImpl extends AuthRepo {
         uId: user.uid,
       );
       await addUserData(user: userEntity);
+      await saveUserData(user: userEntity);
       return right(userEntity);
     } on CustomException catch (e) {
       await deleteUser(user);
@@ -44,7 +45,7 @@ class AuthRepoImpl extends AuthRepo {
       );
       return left(
         ServerFailure(
-          'حدث خطأ ما. الرجاء المحاولة مرة اخرى.',
+          'حدث خطأ ما. الرجاء المحاولة مرة اخرى.',
         ),
       );
     }
@@ -71,11 +72,11 @@ class AuthRepoImpl extends AuthRepo {
       return left(ServerFailure(e.message));
     } catch (e) {
       log(
-        'Exception in AuthRepoImpl.createUserWithEmailAndPassword: ${e.toString()}',
+        'Exception in AuthRepoImpl.signinWithEmailAndPassword: ${e.toString()}',
       );
       return left(
         ServerFailure(
-          'حدث خطأ ما. الرجاء المحاولة مرة اخرى.',
+          'حدث خطأ ما. الرجاء المحاولة مرة اخرى.',
         ),
       );
     }
@@ -91,19 +92,22 @@ class AuthRepoImpl extends AuthRepo {
       var isUserExist = await databaseService.checkIfDataExists(
           path: BackendEndpoint.isUserExists, docuementId: user.uid);
       if (isUserExist) {
-        await getUserData(uid: user.uid);
+        userEntity = await getUserData(uid: user.uid) as UserModel;
       } else {
         await addUserData(user: userEntity);
       }
+      await saveUserData(user: userEntity);
       return right(userEntity);
+    } on CustomException catch (e) {
+      return left(ServerFailure(e.message));
     } catch (e) {
       await deleteUser(user);
       log(
-        'Exception in AuthRepoImpl.createUserWithEmailAndPassword: ${e.toString()}',
+        'Exception in AuthRepoImpl.signinWithGoogle: ${e.toString()}',
       );
       return left(
         ServerFailure(
-          'حدث خطأ ما. الرجاء المحاولة مرة اخرى.',
+          'حدث خطأ ما. الرجاء المحاولة مرة اخرى.',
         ),
       );
     }
@@ -116,15 +120,18 @@ class AuthRepoImpl extends AuthRepo {
       user = await firebaseAuthService.signInWithFacebook();
       var userEntity = UserModel.fromFirebaseUser(user);
       await addUserData(user: userEntity);
+      await saveUserData(user: userEntity);
       return right(userEntity);
+    } on CustomException catch (e) {
+      return left(ServerFailure(e.message));
     } catch (e) {
       await deleteUser(user);
       log(
-        'Exception in AuthRepoImpl.createUserWithEmailAndPassword: ${e.toString()}',
+        'Exception in AuthRepoImpl.signinWithFacebook: ${e.toString()}',
       );
       return left(
         ServerFailure(
-          'حدث خطأ ما. الرجاء المحاولة مرة اخرى.',
+          'حدث خطأ ما. الرجاء المحاولة مرة اخرى.',
         ),
       );
     }
@@ -138,15 +145,18 @@ class AuthRepoImpl extends AuthRepo {
 
       var userEntity = UserModel.fromFirebaseUser(user);
       await addUserData(user: userEntity);
+      await saveUserData(user: userEntity);
       return right(userEntity);
+    } on CustomException catch (e) {
+      return left(ServerFailure(e.message));
     } catch (e) {
       await deleteUser(user);
       log(
-        'Exception in AuthRepoImpl.createUserWithEmailAndPassword: ${e.toString()}',
+        'Exception in AuthRepoImpl.signinWithApple: ${e.toString()}',
       );
       return left(
         ServerFailure(
-          'حدث خطأ ما. الرجاء المحاولة مرة اخرى.',
+          'حدث خطأ ما. الرجاء المحاولة مرة اخرى.',
         ),
       );
     }

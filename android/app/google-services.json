@@ -43,6 +43,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1015478328608-pt2d2mr742tlimvg3rmp4oeb9k0cht1k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fruits_app",
+            "certificate_hash": "ef96a769ef85f180698ad69fd606fdb4abf55285"
+          }
+        },
+        {
           "client_id": "1015478328608-995gk6cfa2egm1mpd1uncakkvh560o2d.apps.googleusercontent.com",
           "client_type": 3
         }
