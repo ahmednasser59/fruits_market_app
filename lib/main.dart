@@ -7,6 +7,7 @@ import 'package:fruits_hub/core/helper_functions/on_generate_routes.dart';
 import 'package:fruits_hub/core/services/get_it_service.dart';
 import 'package:fruits_hub/core/services/shared_preferences_singleton.dart';
 import 'package:fruits_hub/core/utils/app_colors.dart';
+import 'package:fruits_hub/core/widgets/connectivity_wrapper.dart';
 
 import 'core/services/custom_bloc_observer.dart';
 import 'features/splash/presentation/views/splash_view.dart';
@@ -72,6 +73,9 @@ class FruitHub extends StatelessWidget {
             onGenerateRoute: onGenerateRoute,
             initialRoute: SplashView.routeName,
             debugShowCheckedModeBanner: false,
+            builder: (context, child) {
+              return ConnectivityWrapper(child: child ?? const SizedBox());
+            },
           );
         },
       ),
