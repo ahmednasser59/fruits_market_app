@@ -26,10 +26,15 @@ class CustomHomeAppBar extends StatelessWidget {
           color: const Color(0xFF949D9E),
         ),
       ),
-      subtitle: Text(
-        getUser().name,
-        textAlign: TextAlign.right,
-        style: TextStyles.bold16,
+      subtitle: InkWell(
+        onTap: () {
+          ProfileTabNotification().dispatch(context);
+        },
+        child: Text(
+          getUser().name,
+          textAlign: TextAlign.right,
+          style: TextStyles.bold16,
+        ),
       ),
     );
   }

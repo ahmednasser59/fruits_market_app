@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fruits_hub/core/cubits/settings_cubit/settings_cubit.dart';
 import 'package:fruits_hub/core/helper_functions/get_user.dart';
 import 'package:fruits_hub/core/services/shared_preferences_singleton.dart';
 import 'package:fruits_hub/core/utils/app_colors.dart';
@@ -24,7 +26,7 @@ class ProfileView extends StatelessWidget {
                 const SizedBox(height: 24),
                 CircleAvatar(
                   radius: 45,
-                  backgroundColor: AppColors.lightPrimaryColor.withOpacity(0.1),
+                  backgroundColor: AppColors.lightPrimaryColor.withAlpha(25),
                   child: Image.asset(
                     Assets.imagesProfileImage,
                     width: 60,
@@ -54,6 +56,77 @@ class ProfileView extends StatelessWidget {
                   title: 'البريد الإلكتروني',
                   value: user.email,
                 ),
+                const SizedBox(height: 24),
+
+                // Settings section
+                _buildSectionTitle('الإعدادات'),
+                const SizedBox(height: 12),
+
+                // Language toggle
+                BlocBuilder<SettingsCubit, SettingsState>(
+                  builder: (context, state) {
+                    final isArabic =
+                        context.read<SettingsCubit>().isArabic;
+                    return _buildSettingItem(
+                      icon: Icons.language,
+                      title: 'اللغة',
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            isArabic ? 'العربية' : 'English',
+                            style: TextStyles.semiBold13.copyWith(
+                              color: AppColors.primaryColor,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Switch(
+                            value: !isArabic,
+                            activeColor: AppColors.primaryColor,
+                            onChanged: (value) {
+                              context.read<SettingsCubit>().changeLocale(
+                                    value ? 'en' : 'ar',
+                                  );
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 12),
+
+                // Theme toggle
+                BlocBuilder<SettingsCubit, SettingsState>(
+                  builder: (context, state) {
+                    final isDark =
+                        context.read<SettingsCubit>().isDarkMode;
+                    return _buildSettingItem(
+                      icon: isDark ? Icons.dark_mode : Icons.light_mode,
+                      title: 'المظهر',
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            isDark ? 'داكن' : 'فاتح',
+                            style: TextStyles.semiBold13.copyWith(
+                              color: AppColors.primaryColor,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Switch(
+                            value: isDark,
+                            activeColor: AppColors.primaryColor,
+                            onChanged: (value) {
+                              context.read<SettingsCubit>().toggleTheme();
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+
                 const SizedBox(height: 32),
                 SizedBox(
                   width: double.infinity,
@@ -84,9 +157,52 @@ class ProfileView extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(height: 24),
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Text(
+        title,
+        style: TextStyles.bold16.copyWith(
+          color: AppColors.primaryColor,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSettingItem({
+    required IconData icon,
+    required String title,
+    required Widget trailing,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x14000000),
+            blurRadius: 10,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: AppColors.primaryColor, size: 24),
+          const SizedBox(width: 16),
+          Text(title, style: TextStyles.semiBold16),
+          const Spacer(),
+          trailing,
         ],
       ),
     );
@@ -103,11 +219,11 @@ class ProfileView extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.08),
+            color: Color(0x14000000),
             blurRadius: 10,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
