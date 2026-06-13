@@ -20,6 +20,10 @@ class ProductsGridViewBlocBuilder extends StatelessWidget {
           return ProductsGridView(
             products: state.products,
           );
+        } else if (state is BestSellingProductsSuccess) {
+          return ProductsGridView(
+            products: state.products,
+          );
         } else if (state is ProductsFailure) {
           return SliverToBoxAdapter(
               child: CustomErrorWidget(text: state.errMessage));
