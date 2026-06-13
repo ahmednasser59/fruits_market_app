@@ -10,39 +10,44 @@ class ActiveItem extends StatelessWidget {
   final String image;
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.only(left: 16),
-        decoration: ShapeDecoration(
-          color: const Color(0xFFEEEEEE),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 30,
-              height: 30,
-              decoration: ShapeDecoration(
-                color: const Color(0xFF1B5E37),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeInOut,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColors.primaryColor.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: AppColors.primaryColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Center(
+              child: SvgPicture.asset(
+                image,
+                width: 18,
+                height: 18,
+                colorFilter: const ColorFilter.mode(
+                  Colors.white,
+                  BlendMode.srcIn,
                 ),
               ),
-              child: Center(child: SvgPicture.asset(image)),
             ),
-            const SizedBox(
-              width: 4,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            text,
+            style: TextStyles.semiBold11.copyWith(
+              color: AppColors.primaryColor,
             ),
-            Text(
-              text,
-              style:
-                  TextStyles.semiBold11.copyWith(color: AppColors.primaryColor),
-            )
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

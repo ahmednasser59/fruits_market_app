@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../cart_view.dart';
 import '../products_view.dart';
+import '../profile_view.dart';
 import 'home_view.dart';
 
 class MainViewBody extends StatelessWidget {
@@ -20,6 +21,7 @@ class MainViewBody extends StatelessWidget {
         HomeView(),
         ProductsView(),
         CartView(),
+        ProfileView(),
       ],
     );
   }

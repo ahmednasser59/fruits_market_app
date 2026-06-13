@@ -14,7 +14,7 @@ List<BottomNavigationBarEntity> get bottomNavigationBarItems => [
       BottomNavigationBarEntity(
           activeImage: Assets.imagesVuesaxBoldHome,
           inActiveImage: Assets.imagesVuesaxOutlineHome,
-          name: 'الرئيسية'),
+          name: 'الرئيسية'),
       BottomNavigationBarEntity(
           activeImage: Assets.imagesVuesaxBoldProducts,
           inActiveImage: Assets.imagesVuesaxOutlineProducts,
@@ -23,4 +23,8 @@ List<BottomNavigationBarEntity> get bottomNavigationBarItems => [
           activeImage: Assets.imagesVuesaxBoldShoppingCart,
           inActiveImage: Assets.imagesVuesaxOutlineShoppingCart,
           name: 'سلة التسوق'),
+      BottomNavigationBarEntity(
+          activeImage: Assets.imagesVuesaxBoldUser,
+          inActiveImage: Assets.imagesVuesaxOutlineUser,
+          name: 'حسابي'),
     ];

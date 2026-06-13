@@ -12,7 +12,13 @@ class CustomHomeAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       trailing: const NotificationWidget(),
-      leading: Image.asset(Assets.imagesProfileImage),
+      leading: GestureDetector(
+        onTap: () {
+          // Navigate to profile tab (index 3)
+          ProfileTabNotification().dispatch(context);
+        },
+        child: Image.asset(Assets.imagesProfileImage),
+      ),
       title: Text(
         'صباح الخير !..',
         textAlign: TextAlign.right,
@@ -28,3 +34,5 @@ class CustomHomeAppBar extends StatelessWidget {
     );
   }
 }
+
+class ProfileTabNotification extends Notification {}

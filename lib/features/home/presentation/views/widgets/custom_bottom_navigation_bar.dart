@@ -7,42 +7,47 @@ class CustomBottomNavigationBar extends StatefulWidget {
   const CustomBottomNavigationBar({super.key, required this.onItemTapped});
   final ValueChanged<int> onItemTapped;
   @override
-  State<CustomBottomNavigationBar> createState() =>
-      _CustomBottomNavigationBarState();
+  CustomBottomNavigationBarState createState() =>
+      CustomBottomNavigationBarState();
 }
 
-class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
+class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   int selectedIndex = 0;
+
+  void updateIndex(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 375,
-      height: 70,
-      decoration: const ShapeDecoration(
+      height: 75,
+      decoration: BoxDecoration(
         color: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
-          ),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
         ),
-        shadows: [
+        boxShadow: [
           BoxShadow(
-            color: Color(0x19000000),
-            blurRadius: 25,
-            offset: Offset(0, -2),
-            spreadRadius: 0,
-          )
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 20,
+            offset: const Offset(0, -4),
+          ),
         ],
       ),
-      child: Row(
-        children: bottomNavigationBarItems.asMap().entries.map((e) {
-          var index = e.key;
-          var entity = e.value;
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: bottomNavigationBarItems.asMap().entries.map((e) {
+            var index = e.key;
+            var entity = e.value;
 
-          return Expanded(
-            flex: index == selectedIndex ? 3 : 2,
-            child: GestureDetector(
+            return GestureDetector(
+              behavior: HitTestBehavior.opaque,
               onTap: () {
                 setState(() {
                   selectedIndex = index;
@@ -53,9 +58,9 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                 isSelected: selectedIndex == index,
                 bottomNavigationBarEntity: entity,
               ),
-            ),
-          );
-        }).toList(),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
