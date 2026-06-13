@@ -98,6 +98,8 @@ class FirebaseAuthService {
           await FirebaseAuth.instance.signInWithCredential(credential);
 
       return userCredential.user!;
+    } on CustomException {
+      rethrow;
     } catch (e) {
       log("Google SignIn error: $e");
       throw CustomException(message: 'حدث خطأ أثناء تسجيل الدخول بـ Google');
