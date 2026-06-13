@@ -28,9 +28,12 @@ class _CheckoutViewBodyState extends State<CheckoutViewBody> {
   void initState() {
     pageController = PageController();
     pageController.addListener(() {
-      setState(() {
-        currentPageIndex = pageController.page!.toInt();
-      });
+      final newIndex = pageController.page?.round() ?? 0;
+      if (newIndex != currentPageIndex) {
+        setState(() {
+          currentPageIndex = newIndex;
+        });
+      }
     });
     super.initState();
   }
@@ -92,7 +95,7 @@ class _CheckoutViewBodyState extends State<CheckoutViewBody> {
                   _processPayment(context);
                 }
               },
-              text: getNextButtonText(currentPageIndex)),
+              text: _getNextButtonText(currentPageIndex, context)),
           const SizedBox(
             height: 32,
           ),
@@ -104,20 +107,20 @@ class _CheckoutViewBodyState extends State<CheckoutViewBody> {
   void _handleShippingSectionValidation(BuildContext context) {
     if (context.read<OrderInputEntity>().payWithCash != null) {
       pageController.animateToPage(currentPageIndex + 1,
-          duration: const Duration(milliseconds: 300), curve: Curves.bounceIn);
+          duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
     } else {
       showBar(context, 'يرجي تحديد طريقه الدفع');
     }
   }
 
-  String getNextButtonText(int currentPageIndex) {
+  String _getNextButtonText(int currentPageIndex, BuildContext context) {
     switch (currentPageIndex) {
       case 0:
         return 'التالي';
       case 1:
         return 'التالي';
       case 2:
-        return 'الدفع عبر PayPal';
+        return 'تأكيد الطلب';
       default:
         return 'التالي';
     }
@@ -127,7 +130,7 @@ class _CheckoutViewBodyState extends State<CheckoutViewBody> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       pageController.animateToPage(currentPageIndex + 1,
-          duration: const Duration(milliseconds: 300), curve: Curves.bounceIn);
+          duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
     } else {
       valueNotifier.value = AutovalidateMode.always;
     }
@@ -135,9 +138,26 @@ class _CheckoutViewBodyState extends State<CheckoutViewBody> {
 
   void _processPayment(BuildContext context) {
     var orderEntity = context.read<OrderInputEntity>();
+    var addOrderCubit = context.read<AddOrderCubit>();
+
+    // If paying with cash, submit order directly
+    if (orderEntity.payWithCash == true) {
+      addOrderCubit.addOrder(order: orderEntity);
+      return;
+    }
+
+    // Online payment
+    // Check if PayPal credentials are configured
+    if (kPaypalClientId == 'YOUR_PAYPAL_CLIENT_ID' ||
+        kPaypalSecretKey == 'YOUR_PAYPAL_SECRET_KEY') {
+      // PayPal not configured — submit order directly for now
+      addOrderCubit.addOrder(order: orderEntity);
+      return;
+    }
+
+    // Online payment via PayPal
     PaypalPaymentEntity paypalPaymentEntity =
         PaypalPaymentEntity.fromEntity(orderEntity);
-    var addOrderCubit = context.read<AddOrderCubit>();
 
     Navigator.of(context).push(MaterialPageRoute(
       builder: (BuildContext context) => PaypalCheckoutView(
@@ -155,10 +175,10 @@ class _CheckoutViewBodyState extends State<CheckoutViewBody> {
         onError: (error) {
           Navigator.pop(context);
           log(error.toString());
-          showBar(context, 'حدث خطأ في عملية الدفع');
+          showBar(context, 'حدث خطأ في عملية الدفع');
         },
         onCancel: () {
-          print('cancelled:');
+          log('Payment cancelled');
         },
       ),
     ));

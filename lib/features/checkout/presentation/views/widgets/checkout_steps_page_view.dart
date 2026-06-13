@@ -28,13 +28,16 @@ class CheckoutStepsPageView extends StatelessWidget {
           formKey: formKey,
           valueListenable: valueListenable,
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ShippingAddressWidget(pageController: pageController),
-            const SizedBox(height: 16),
-            const OrderSummryWidget(),
-          ],
+        SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 16),
+              ShippingAddressWidget(pageController: pageController),
+              const SizedBox(height: 16),
+              const OrderSummryWidget(),
+            ],
+          ),
         ),
       ],
     );

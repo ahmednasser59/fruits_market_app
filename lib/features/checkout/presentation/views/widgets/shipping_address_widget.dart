@@ -29,14 +29,18 @@ class ShippingAddressWidget extends StatelessWidget {
           const SizedBox(
             width: 8,
           ),
-          Text(
-            ' ${context.read<OrderInputEntity>().shippingAddressEntity}',
-            textAlign: TextAlign.right,
-            style: TextStyles.regular13.copyWith(
-              color: const Color(0xFF4E5556),
+          Expanded(
+            child: Text(
+              '${context.read<OrderInputEntity>().shippingAddressEntity}',
+              textAlign: TextAlign.right,
+              style: TextStyles.regular13.copyWith(
+                color: const Color(0xFF4E5556),
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
-          const Spacer(),
+          const SizedBox(width: 8),
           GestureDetector(
             onTap: () {
               pageController.animateToPage(1,
@@ -45,6 +49,7 @@ class ShippingAddressWidget extends StatelessWidget {
             },
             child: SizedBox(
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   SvgPicture.asset(
                     Assets.imagesEdit,
