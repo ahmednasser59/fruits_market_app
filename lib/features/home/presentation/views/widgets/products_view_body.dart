@@ -42,13 +42,38 @@ class _ProductsViewBodyState extends State<ProductsViewBody> {
                 const SizedBox(
                   height: 16,
                 ),
-                const SearchTextField(),
+                SearchTextField(
+                  onChanged: (query) {
+                    context.read<ProductsCubit>().searchProducts(query);
+                  },
+                  onFilterTap: () async {
+                    final result = await showModalBottomSheet<Map<String, dynamic>>(
+                      context: context,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                      ),
+                      builder: (ctx) => const FilterBottomSheet(),
+                    );
+                    if (result != null && context.mounted) {
+                      context.read<ProductsCubit>().filterProducts(
+                        minPrice: result['minPrice'],
+                        maxPrice: result['maxPrice'],
+                        organicOnly: result['organic'],
+                      );
+                    }
+                  },
+                ),
                 const SizedBox(
                   height: 12,
                 ),
-                ProductsViewHeader(
-                    productsLength:
-                        context.read<ProductsCubit>().productsLength),
+                BlocBuilder<ProductsCubit, ProductsState>(
+                  builder: (context, state) {
+                    return ProductsViewHeader(
+                      productsLength:
+                          context.read<ProductsCubit>().productsLength,
+                    );
+                  },
+                ),
                 const SizedBox(
                   height: 8,
                 ),

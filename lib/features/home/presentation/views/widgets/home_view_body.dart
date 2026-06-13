@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fruits_hub/constants.dart';
 import 'package:fruits_hub/core/cubits/products_cubit/products_cubit.dart';
+import 'package:fruits_hub/core/widgets/search_text_field.dart';
 import 'package:fruits_hub/features/home/presentation/views/widgets/best_selling_header.dart';
 import 'package:fruits_hub/features/home/presentation/views/widgets/custom_home_app_bar.dart';
 import 'package:fruits_hub/features/home/presentation/views/widgets/featured_list.dart';
 
-import '../../../../../core/widgets/search_text_field.dart';
 import 'products_grid_view_bloc_builder.dart';
 
 class HomeViewBody extends StatefulWidget {
@@ -27,36 +27,56 @@ class _HomeViewBodyState extends State<HomeViewBody> {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: kTopPaddding,
                 ),
-                CustomHomeAppBar(),
-                SizedBox(
+                const CustomHomeAppBar(),
+                const SizedBox(
                   height: 16,
                 ),
-                SearchTextField(),
-                SizedBox(
+                SearchTextField(
+                  onChanged: (query) {
+                    context.read<ProductsCubit>().searchProducts(query);
+                  },
+                  onFilterTap: () async {
+                    final result = await showModalBottomSheet<Map<String, dynamic>>(
+                      context: context,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                      ),
+                      builder: (ctx) => const FilterBottomSheet(),
+                    );
+                    if (result != null && context.mounted) {
+                      context.read<ProductsCubit>().filterProducts(
+                        minPrice: result['minPrice'],
+                        maxPrice: result['maxPrice'],
+                        organicOnly: result['organic'],
+                      );
+                    }
+                  },
+                ),
+                const SizedBox(
                   height: 12,
                 ),
-                FeaturedList(),
-                SizedBox(
+                const FeaturedList(),
+                const SizedBox(
                   height: 12,
                 ),
-                BestSellingHeader(),
-                SizedBox(
+                const BestSellingHeader(),
+                const SizedBox(
                   height: 8,
                 ),
               ],
             ),
           ),
-          ProductsGridViewBlocBuilder()
+          const ProductsGridViewBlocBuilder()
         ],
       ),
     );
